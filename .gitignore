@@ -1,1 +1,9 @@
+
+# raw data directory
 /data/csv
+
+# dotenv environment variables file
+.env
+.env.test
+
+
