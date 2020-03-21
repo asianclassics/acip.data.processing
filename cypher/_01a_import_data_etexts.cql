@@ -3,15 +3,15 @@
 // -- /Users/joel/Library/Application Support/Neo4j Desktop/Application/neo4jDatabases
 // -- so when importing into Neo4j specify:
 // ---- file:///directory_in_database_folder_above/file
+
 // reset database
 MATCH (n) DETACH DELETE n;
 
 // LOAD DATA ---------------------------
-// place data in Neo4j data folder
 
 //"catRef","tibText","newCatNo","collection","chkLevel","catalogingStatus","titleEng","titleTib","titleTibBrief","titleSkt","langMain","authorEng","authorTib","authorSkt","authorDates","primaryAuthorTib","primaryAuthorEng","primaryAuthorSkt","subjectEng","subjectTib","subjectSkt","sectionVolume","volNdx","foliosPages","edition","description","notes","drawingsAndIllustrations","datespublished","textFormat","cover","readability","pageNumbers","pageSize","printedAreaSize","linesPerPage","verificationResults","lowestFolioNo","highestFolioNo","nFolios","nPages","tibEntry","t3.engEntry","sktEntry"
 USING PERIODIC COMMIT 
-LOAD CSV WITH HEADERS FROM "file:///acip/etext_authors_with_headers.csv" as row FIELDTERMINATOR ","
+LOAD CSV WITH HEADERS FROM $fileAuthors as row FIELDTERMINATOR ","
 CREATE (:Author {
     id: row.recID,
     author_eng: row.primaryNameEng,
@@ -22,7 +22,7 @@ CREATE (:Author {
 
 // "tibEntry","engEntry","sktEntry","newTibEntry","newEngEntry","newSktEntry","recID"
 USING PERIODIC COMMIT 
-LOAD CSV WITH HEADERS FROM "file:///acip/etext_subjects_with_headers.csv" as row FIELDTERMINATOR ","
+LOAD CSV WITH HEADERS FROM $fileSubjects as row FIELDTERMINATOR ","
 CREATE (:Subject {
     id: row.recID,
     subject_eng: row.engEntry,
@@ -40,8 +40,8 @@ CREATE (:Subject {
 //[33] printedAreaSize	linesPerPage	verificationResults	lowestFolioNo	
 //[37] highestFolioNo	nFolios	nPages	tibEntry	engEntry	sktEntry
 USING PERIODIC COMMIT 
-LOAD CSV WITH HEADERS FROM "file:///acip/etext_with_headers.csv" as row FIELDTERMINATOR ","
-CREATE (w:Work {
+LOAD CSV WITH HEADERS FROM $fileTexts as row FIELDTERMINATOR ","
+CREATE (:Work {
 	cat_ref:row.catRef,
     cat_number:row.newCatNo,
     title_eng: row.titleEng,
@@ -50,9 +50,27 @@ CREATE (w:Work {
     title_skt: row.titleSkt
     });
 
+USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM $fileTexts as row FIELDTERMINATOR ","
+CREATE (:Item {
+    cat_ref: row.catRef,
+    language: row.langMain,
+    foliosPages: row.foliosPages,
+    edition: row.edition,
+    description: row.description,
+    notes: row.notes,
+    textFormat: row.textFormat,
+    cover: row.cover,
+    readability: row.readability,
+    pageNumbers: row.pageNumbers,
+    pageSize: row.pageSize,
+    printedAreaSize: row.printedAreaSize,
+    linesPerPage: row.linesPerPage
+});
+
 USING PERIODIC COMMIT 
-LOAD CSV WITH HEADERS FROM "file:///acip/etext_text_data_with_headers.csv" as row FIELDTERMINATOR ","
-CREATE (t:Transliteration {
+LOAD CSV WITH HEADERS FROM $fileTextData as row FIELDTERMINATOR ","
+CREATE (:Transliteration {
     cat_ref: row.catRef,
     text: row.tibText
 });
