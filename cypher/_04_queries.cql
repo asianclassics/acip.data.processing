@@ -39,4 +39,25 @@ return count, tibetan, english
 order by count desc;
 
 
+MATCH (n:Person)
+MERGE (c:Company {name: TOLOWER(SPLIT(n.slug, '@')[1])})
+CREATE (n)-[:AT]->(c);
 
+MATCH (n:Work)
+MERGE (s:Sub {subject_tib: SPLIT(n.subject_tib, ';')})
+WITH s, n
+UNWIND s.subject_tib as subj
+MATCH(t:Topic {topic_tib: replace(subj[0],"/","")})
+MERGE (n)-[:HAS_SUBJECT]->(t);
+
+MATCH (n:Work)
+with SPLIT(n.subject_tib, ';') as s, n
+UNWIND s as subj
+WITH distinct subj
+MERGE(t:Subject {subject_tib: subj})
+MERGE (n)-[:HAS_SUBJECT]->(t);
+
+
+match(p:Person)-[:IS_CREATOR]->(w:Work)-[:HAS_SUBJECT]->(t:Topic)
+match(w)-[:HAS_INSTANCE]->(i:Item)-[:HAS_DIGITAL_ASSET]->(d:Digital_Asset)
+return p, w, t, i, d
