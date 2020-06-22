@@ -1,7 +1,10 @@
 import os 
-from neo4j import CypherError, ServiceUnavailable, unit_of_work
-from transaction_function import run_transaction_function
+from neo4j import CypherError, ServiceUnavailable
+from python.functions.graph import run_transaction_function
+from python.classes import GraphConnector
 
+
+# create the graph object, then
 
 def write_data(graph, query, **kwargs):
     with graph._driver.session as tx:
