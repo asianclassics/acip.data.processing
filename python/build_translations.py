@@ -42,3 +42,7 @@ def collect_translations():
         df = get_translation_group(translation)
         print(df.head)
         df.to_csv(os.path.join(translations_dir, '../..', translation['output']), sep='\t', encoding='utf-8')
+
+
+if __name__ == "__main__":
+    collect_translations()

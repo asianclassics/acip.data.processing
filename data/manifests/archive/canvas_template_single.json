@@ -1,0 +1,24 @@
+{
+    "@type": "sc:Canvas",
+    "@id": "http://iiif.asianclassics.org/segPap_022/canvas/1",
+    "label": "1",
+    "width": 2319,
+    "height": 389,
+    "images": [
+      {
+        "@type": "oa:Annotation",
+        "motivation": "sc:painting",
+        "on": "http://iiif.asianclassics.org/segPap_022/canvas/1",
+        "resource": {
+          "@type": "dctypes:Image",
+          "@id": "http://157.245.187.36:8182/iiif/2/001__dul_ba_ka001/full/500,/0/default.JP2",
+
+          "service": {
+            "@context": "http://iiif.io/api/image/2/context.json",
+            "@id": "http://157.245.187.36:8182/iiif/2/001__dul_ba_ka001.JP2",
+            "profile": "http://iiif.io/api/image/2/level2.json"
+          }
+        }
+      }
+    ]
+  }

@@ -60,4 +60,31 @@ MERGE (n)-[:HAS_SUBJECT]->(t);
 
 match(p:Person)-[:IS_CREATOR]->(w:Work)-[:HAS_SUBJECT]->(t:Topic)
 match(w)-[:HAS_INSTANCE]->(i:Item)-[:HAS_DIGITAL_ASSET]->(d:Digital_Asset)
-return p, w, t, i, d
+return p, w, t, i, d;
+
+// ----------------------------------------------
+//This relates to creating nodes from subject paths
+//converting properties representing file paths to tree structure
+//https://community.neo4j.com/t/convert-properties-representing-file-paths-to-tree-structure/10509/5
+//We use an APOC function to get the indexes of all slashes in the string
+//(this gets us a list of indexes), then we use an extract on that list to get us
+//the substring from the start of the path to the given index, and we make sure we
+//add the full path at the end:
+//
+//WITH "path/to/the/thing.txt" as path
+//WITH path, apoc.text.indexesOf(path, "/") as delimiters
+//WITH path, [del in delimiters | substring(path, 0, del)] + path as paths
+//RETURN paths
+//This results in: ["path", "path/to", "path/to/the", "path/to/the/thing.txt"]
+//Now that you have the absolute path to each node, you can MERGE the
+//nodes (with a FOREACH), and then MERGE the relationships between each node.
+//
+//To avoid creating duplicates, you can use apoc.coll.pairsMin() on the nodes to
+//get you a list of list pairs of adjacent nodes in the list, then UNWIND that and
+//MERGE the relationships between.
+// ----------------------------------------------
+match(t:Topic)
+unwind t.topic_eng as path
+with path, apoc.text.indexesOf(path, "/") as delims
+with path, [d in delims | substring(path, 0, d)] + path as paths
+return paths

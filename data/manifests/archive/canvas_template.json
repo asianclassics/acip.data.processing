@@ -1,0 +1,28 @@
+{
+  "canvases": [
+    {
+      "@type": "sc:Canvas",
+      "@id": "%(client_host)s/%(group_name)s/canvas/%(image_num)s",
+      "label": "1",
+      "width": 2319,
+      "height": 389,
+      "images": [
+        {
+          "@type": "oa:Annotation",
+          "motivation": "sc:painting",
+          "on": "%(client_host)s/%(group_name)s/canvas/%(image_num)s",
+          "resource": {
+            "@type": "dctypes:Image",
+            "@id": "%(server_host)s/%(server_path)s/%(iiif_version)s/%(image_name)s/full/500,/0/default.%(image_ext)s",
+
+            "service": {
+              "@context": "http://iiif.io/api/image/2/context.json",
+              "@id": "%(server_host)s/%(server_path)s/%(iiif_version)s/%(image_name)s.%(image_ext)s",
+              "profile": "%(iiif_profile)s"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

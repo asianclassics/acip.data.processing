@@ -1,0 +1,41 @@
+{
+    "@context": "http://iiif.io/api/presentation/2/context.json",
+    "@type": "sc:Manifest",
+    "@id": "http://iiif.asianclassics.org/manifests/manifest.json",
+    "label": "Meow",
+    "description": "A test.",
+    "attribution": "ACIP",
+    "logo": "http://iiif.asianclassics.org/logo192.png",
+    "sequences": [
+        {
+            "@type": "sc:Sequence",
+            "viewingDirection": "top-to-bottom",
+            "canvases": [
+                {
+                  "@type": "sc:Canvas",
+                  "@id": "http://iiif.asianclassics.org/segPap_022/canvas/1",
+                  "label": "1",
+                  "width": 2319,
+                  "height": 389,
+                  "images": [
+                    {
+                      "@type": "oa:Annotation",
+                      "motivation": "sc:painting",
+                      "on": "http://iiif.asianclassics.org/segPap_022/canvas/1",
+                      "resource": {
+                        "@type": "dctypes:Image",
+                        "@id": "http://157.245.187.36:8182/iiif/2/test/full/500,/0/default.jpg",
+
+                        "service": {
+                          "@context": "http://iiif.io/api/image/2/context.json",
+                          "@id": "http://157.245.187.36:8182/iiif/2/test.jpg",
+                          "profile": "http://iiif.io/api/image/2/level2.json"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+        }
+    ]
+}

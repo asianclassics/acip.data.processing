@@ -1,14 +1,13 @@
-import os 
-from neo4j import CypherError, ServiceUnavailable, unit_of_work
+from neo4j import CypherError, ServiceUnavailable
 from python.queries import rels, delete
+from python.functions import run_transaction_function
 
-
-@unit_of_work(timeout=25, metadata={'name': 'create relationships'})
-def run_transaction_function(tx, query, **kwargs):
-    results = tx.run(query, **{k: v for k, v in kwargs.items() if v is not None})
-    # print(results.summary().statement)
-    print(results.summary().counters)
-    return results.consume()
+# @unit_of_work(timeout=25, metadata={'name': 'create relationships'})
+# def run_transaction_function(tx, query, **kwargs):
+#     results = tx.run(query, **{k: v for k, v in kwargs.items() if v is not None})
+#     # print(results.summary().statement)
+#     print(results.summary().counters)
+#     return results.consume()
 
 
 def create_relationships(graph):
