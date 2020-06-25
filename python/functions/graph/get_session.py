@@ -1,7 +1,5 @@
-import os 
 from neo4j import CypherError, ServiceUnavailable
-from python.functions.graph import run_transaction_function
-from python.classes import GraphConnector
+from python.functions import run_transaction_function
 
 
 # create the graph object, then

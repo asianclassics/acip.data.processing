@@ -3,10 +3,12 @@ import json
 from pathlib import Path
 from python.templates.placeholder_values import p as placeholder_values
 from python.functions import get_spaces_directory_files, \
-    load_templates, update_json_placeholders, update_canvas_items
+    load_templates, update_json_placeholders, update_canvas_items, configure_logger
 
 # https://acip.sfo2.digitaloceanspaces.com/scans/published/V8LS16868_I8LS16897_3-738/
 # https://acip.sfo2.digitaloceanspaces.com/scans/published/V8LS16868_I8LS16897_3-738/I8LS168970005.jpg
+
+configure_logger()
 
 start_page = 193
 end_page = 280
@@ -17,10 +19,12 @@ spaces_dir = 'V8LS16868_I8LS16897_3-738'
 spaces_pages = get_spaces_directory_files(spaces_dir)
 # load json templates
 python_dir = os.path.dirname(os.path.abspath(__file__))
-manifest, canvas = load_templates(python_dir, data_dir)
+manifest, canvas = load_templates(python_dir)
 
 # update the manifest placeholders
 manifest = update_json_placeholders(manifest, placeholder_values)
+print(manifest)
+quit()
 
 
 # TO_DO: set up so it can traverse entire directory on spaces

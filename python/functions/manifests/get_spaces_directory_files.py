@@ -8,13 +8,13 @@ import boto3
 load_dotenv()
 
 config = {
-    'region_name': 'sfo2',
-    'endpoint_url': 'https://sfo2.digitaloceanspaces.com/',
-    'aws_access_key_id': os.environ.get("aws_key"),
-    'aws_secret_access_key': os.environ.get("aws_secret")
+    'region_name': os.environ.get("SPACES_REGION"),
+    'endpoint_url': os.environ.get("SPACES_HOST"),
+    'aws_access_key_id': os.environ.get("AWS_KEY"),
+    'aws_secret_access_key': os.environ.get("AWS_SECRET")
 }
 
-bucket_endpoint = 'https://acip.sfo2.digitaloceanspaces.com/'
+bucket_endpoint = os.environ.get("SPACES_ENDPOINT")
 
 
 def get_spaces_directory_files(spaces_dir):

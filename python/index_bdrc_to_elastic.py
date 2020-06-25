@@ -1,10 +1,7 @@
 import os
-from generate_acip_schema import ElasticSearch, GoogleSheets, GenerateDocument
-from indexing.config.elasticsearch import conf_es
-from indexing.config.gs import conf_gs
-from indexing.config.bdrc import conf_bdrc
-from indexing.config.ssh import conf_ssh
-from indexing._utils import get_listing_by_type, configure_logger, get_xml
+from python.classes import ElasticSearch, GoogleSheets, GenerateDocument
+from python.config import conf_es, conf_bdrc, conf_gs, conf_ssh
+from python.functions import get_listing_by_type, configure_logger, get_xml
 
 configure_logger()
 
@@ -46,7 +43,7 @@ for collection in collections:
         # es_instance.recreate_indices(es_index_version=index_version)
         # returns listing of items NOT currently indexed in ES, and ES listing
         # this returns listing of items NOT currently indexed in ES, and ES listing
-
+        quit()
         if WORK_TYPE_RESOURCES:
             [current_listing, es_collection] = get_listing_by_type('resources', es_instance, es_index_version=index_version,
                                                                filter_by_collection=collection,

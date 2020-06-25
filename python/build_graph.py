@@ -1,17 +1,13 @@
-import os
-from dotenv import load_dotenv
-from python.functions.graph import load_data, create_indexes, create_relationships
+from python.functions import load_data, create_indexes, create_relationships
 from python.classes import GraphConnector
+from python.config import conf_neo4j
 
 # CONNECT ----------------------------------------------------------
-# load env
-load_dotenv()
-
 # connect to graph --------------------------------
 graph = GraphConnector({
-    "uri": os.environ.get("do_uri"),
-    "password": os.environ.get("password"),
-    "user": os.environ.get("do_user"),
+    "uri": conf_neo4j["uri"],
+    "password": conf_neo4j["password"],
+    "user": conf_neo4j["user"],
     "encrypted": False
 })
 
@@ -32,5 +28,7 @@ def build_graph():
 
 
 if __name__ == "__main__":
+    print(graph)
+    quit()
     build_graph()
 

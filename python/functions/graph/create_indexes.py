@@ -1,5 +1,5 @@
-import os 
-from neo4j import CypherError, ServiceUnavailable, unit_of_work
+from neo4j import unit_of_work
+from neo4j.exceptions import ServiceUnavailable, CypherSyntaxError
 from python.queries import index
 
 
@@ -19,9 +19,9 @@ def create_indexes(graph):
             tx.write_transaction(run_transaction_function, index.person_constraint)
             tx.write_transaction(run_transaction_function, index.subject_constraint)
             tx.success = True
-        except CypherError as e:
+        except CypherSyntaxError as e:
             tx.success = False
-            print(f'CypherError {e}')
+            print(f'CypherSyntaxError {e}')
             raise
         # You should capture any errors along with the query and data for traceability
         except ServiceUnavailable as e:

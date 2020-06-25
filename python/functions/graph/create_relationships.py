@@ -1,13 +1,15 @@
-from neo4j import CypherError, ServiceUnavailable
+from neo4j import unit_of_work
+from neo4j.exceptions import ServiceUnavailable, CypherSyntaxError
 from python.queries import rels, delete
-from python.functions import run_transaction_function
+# from python.functions import run_transaction_function
 
-# @unit_of_work(timeout=25, metadata={'name': 'create relationships'})
-# def run_transaction_function(tx, query, **kwargs):
-#     results = tx.run(query, **{k: v for k, v in kwargs.items() if v is not None})
-#     # print(results.summary().statement)
-#     print(results.summary().counters)
-#     return results.consume()
+
+@unit_of_work(timeout=25, metadata={'name': 'create relationships'})
+def run_transaction_function(tx, query, **kwargs):
+    results = tx.run(query, **{k: v for k, v in kwargs.items() if v is not None})
+    # print(results.summary().statement)
+    print(results.summary().counters)
+    return results.consume()
 
 
 def create_relationships(graph):
@@ -19,9 +21,9 @@ def create_relationships(graph):
             tx.write_transaction(run_transaction_function, rels.item_digital_asset)
             tx.write_transaction(run_transaction_function, rels.topic_work_temp_by_english)
             tx.success = True
-        except CypherError as e:
+        except CypherSyntaxError as e:
             tx.success = False
-            print(f'CypherError {e}')
+            print(f'CypherSyntaxError {e}')
             raise
         # You should capture any errors along with the query and data for traceability
         except ServiceUnavailable as e:

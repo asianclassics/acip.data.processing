@@ -2,7 +2,11 @@ import os
 import pandas as pd
 import textract
 
-translations_dir = '/Users/joel/PROJECTS/WORK/CURRENT/ACIP/apps/neo4j.model/data/csv/translations/texts'
+
+current_dir = os.getcwd()
+translations_dir = os.path.join(current_dir, '../data/csv/translations/texts')
+
+# translations_dir = '/Users/joel/PROJECTS/WORK/CURRENT/ACIP/apps/neo4j.model/data/csv/translations/texts'
 translations = [
     {
         "type": ('doc', 'docx'),
