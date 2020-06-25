@@ -6,7 +6,7 @@ user = os.environ.get("aura_user")
 password = os.environ.get("aura_password")
 uri = os.environ.get("aura_uri")
 
-config = {
+conf_neo4j = {
     "uri": uri,
     "password": password,
     "user": user
