@@ -1,5 +1,0 @@
-config/google_creds.json
-Authorizing script for Google Sheets... <gspread.client.Client object at 0x108bb5510>
-getting listing...
-<generate_acip_schema.GoogleSheets.GoogleSheets object at 0x108bb5190>
-/Users/joel/PROJECTS/WORK/CURRENT/ACIP/apps/generate_acip_schema/indexing/data/newest_xml.xml
