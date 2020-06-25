@@ -1,8 +1,6 @@
 import os
 from dotenv import load_dotenv
-from python.functions.graph import load_data
-from python.functions.graph import create_indexes
-from python.functions.graph.create_relationships import create_relationships
+from python.functions.graph import load_data, create_indexes, create_relationships
 from python.classes import GraphConnector
 
 # CONNECT ----------------------------------------------------------
