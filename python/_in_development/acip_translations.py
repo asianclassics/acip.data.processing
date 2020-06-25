@@ -1,6 +1,6 @@
 # from generate_acip_schema import ElasticSearch
 from elasticsearch import Elasticsearch, RequestError, TransportError, ConflictError
-from tests.config.elasticsearch import conf_es
+from python.config.elasticsearch import conf_es
 import os
 import logging
 import tqdm
