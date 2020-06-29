@@ -1,12 +1,27 @@
 # GOOGLE SHEETS
 conf_gs = {
     "scope": ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive'],
-    "json_creds": "config/google_creds.json",
-    "workbook_key": "1hPqe-Y2TWwMTAxIEXYvc8du_GMFUJQNPvZbJou7veAY",
-    "key_mappings": "1P99VMc_61PNm9FCOSZo1sQvXQNUanJozV4ZTm3kxhWo",
-    "key_accessions": "1SLgnUq4ohrAODB-XNQ6oiVqQxxJmeR0IQPozSpW6xiw",
-    "read_collection_1": "Works_1",
-    "read_collection_2": "Works_2",
+    "credentials": {
+        "nlm": "config/credentials_nlm1.json",
+        "nlm2": "config/credentials_nlm2.json",
+    },
+    "workbooks": {
+        "mappings": {
+            "key": "1P99VMc_61PNm9FCOSZo1sQvXQNUanJozV4ZTm3kxhWo",
+            "sheet_name": "Uuree-ACIP-Title-Level-Catalog"
+        },
+        "key": {
+            "key": "1hPqe-Y2TWwMTAxIEXYvc8du_GMFUJQNPvZbJou7veAY",
+        },
+        "accessions": {
+            "key": "1SLgnUq4ohrAODB-XNQ6oiVqQxxJmeR0IQPozSpW6xiw",
+            "sheet_name": "<Munkhnyam> ACIP-Title-Level-Catalog"
+        }
+    },
+    "collections": {
+        "c1": "Works_1",
+        "c2": "Works_2"
+    },
     "starting_worksheet_name": "Branch_0",
     "worksheet_backup": "Backup",
     "read_mapping": "Mapping",
