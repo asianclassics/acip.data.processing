@@ -13,6 +13,22 @@ so far we have,
 TO DO
 4) write each record in the dataframe to the text file, separated by '***********************************'
 5) upload the file to google drive
+
+
+Here's stackoverflow code for v2 javascript, can use as pseudocode
+
+function saveToTextfile() {
+  var ss = SpreadsheetApp.getActive();
+  var sheet = ss.getActiveSheet();
+  var range = sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn());
+  var rows = range.getValues();
+  var folder = DriveApp.getFoldersByName("folderName").next();
+  var files = folder.getFiles();
+  while(files.hasNext()) files.next().setTrashed(true);
+  rows.forEach(function(row, index) {
+    folder.createFile("row" + index + ".txt", row.join(", "));
+  });
+}
 '''
 
 # QUERY STRING EXAMPLES
@@ -21,10 +37,10 @@ folder_name = 'Conferences'
 folder_query = f"name = '{folder_name}' and mimeType = 'application/vnd.google-apps.folder'"
 
 # authorize google, for google sheets and google drive
-sheets_service, drive_service = authorize_google(**conf_gs)
+SHEETS, DRIVE = authorize_google(**conf_gs)
 
 # get sheet data
-data = get_sheet_data(sheets_service, **conf_gs)
+data = get_sheet_data(SHEETS, **conf_gs)
 # data to df
 df = pd.DataFrame(data)
 df = df.rename(columns=df.iloc[0]).drop(df.index[0])
@@ -32,9 +48,13 @@ print(df)
 
 
 # search for the folder of interest and get its ID
-folder_id = get_drive_items(drive_service, folder_query)
-if len(folder_id) != 1:
-    print('folder not found')
+folder_id = get_drive_items(DRIVE, folder_query)
+
+if len(folder_id) < 1:
+    print('folder not found, check folder name variable...')
+    quit()
+elif len(folder_id) > 1:
+    print('folder name is not unique, check google drive...')
     quit()
 
 
@@ -42,9 +62,6 @@ if len(folder_id) != 1:
 files_query = f"'{folder_id[0]}' in parents"
 
 # get files
-directory_files = get_drive_items(drive_service, files_query)
-
-
-
+directory_files = get_drive_items(DRIVE, files_query)
 
 

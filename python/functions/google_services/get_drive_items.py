@@ -1,15 +1,13 @@
 from apiclient import errors
 
 
-
-
 def get_drive_items(service, query):
     # Call the Drive v3 API
     page_token = None
     drive_list = []
     kwargs = {
         "q": query,
-        "spaces": 'drive',
+        "spaces": "drive",
         "fields": "nextPageToken, incompleteSearch, files(id,parents,name)",
         # Specify what you want in the response as a best practice. This string
         # will only get the files' ids, names, and the ids of any folders that they are in
@@ -20,7 +18,9 @@ def get_drive_items(service, query):
 
         try:
             response = service.files().list(**kwargs, pageToken=page_token).execute()
-
+            # note that you can chain everything together and loop through actual files
+            # files = DRIVE.files().list().execute().get('files', [])
+            # for file in files
             for file in response.get('files', []):
                 # Process change
                 print('Found file: %s (%s)' % (file.get('name'), file.get('id')))
