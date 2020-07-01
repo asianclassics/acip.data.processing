@@ -16,11 +16,17 @@ A repository of python programs for Extract, Transform, Load (ETL) pipelines.
 - Neo4j
 - Google Drive
 
+* [Neo4j Graph nodes](#neo4j-graph-nodes)
+
+* [IIIF manifests](#iiif-manifests)
+
+* [Translations](#translations)
+
 ## Pipelines
 
-### Graph nodes
+### Neo4j Graph nodes
 
-> MySSQL to Neo4j
+> MySQL to Neo4j
 
 ### IIIF manifests
 
