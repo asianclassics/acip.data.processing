@@ -1,12 +1,15 @@
-# Write the Readme!
+# ACIP Data Processing
 
+A repository of python programs for Extract, Transform, Load (ETL) pipelines. Data sources include MySQL, Google Sheets, Dropbox, Digital Ocean spaces (S3), BDRC JSON endpoints. Data targets include Elasticsearch, Neo4j, and Google Drive.
 
-## Python 
+## Pipelines
 
+### MySSQL to Neo4j
 
-### Classes
+### S3 to manifests
 
-### Functions
+### Google Sheets / Drive to Elasticsearch
 
+### BDRC endpoints to Elasticsearch
 
-## Cypher
+### Google Sheets to Text file
