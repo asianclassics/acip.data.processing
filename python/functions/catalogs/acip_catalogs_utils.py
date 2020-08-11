@@ -1,54 +1,12 @@
 import re
 import math
 import pandas as pd
-from difflib import SequenceMatcher
+
 from functools import lru_cache
+from python.functions.dataframes.dataframes import split_by
 
 pattern_folio_split = '(\\d+)([AB]){1,2}|(?:INC(.*))'
 pattern_inc = '(?:INC(.*))'
-
-def similar(a, b):
-    return SequenceMatcher(None, a, b).ratio()
-
-    
-def create_column_mapper(x_target_cols, y_input_cols, threshold=0.9):
-    mapper = {}
-    for x in x_target_cols:
-        for y in y_input_cols:
-            if similar(x, y) > threshold:
-                mapper.update({y: x})
-
-    return mapper
-
-
-def set_up_data_frame(worksheet_name):
-    df = pd.DataFrame.from_records(worksheet_name.get_all_values())
-    df = df.rename(columns=df.iloc[0]).drop(df.index[0])
-    df.columns = df.columns \
-        .str.strip() \
-        .str.replace(r'[^\x00-\x7f]', r'') \
-        .str.lower() \
-        .str.replace(r'[()#,\';]', r'') \
-        .str.strip() \
-        .str.replace(' ', '_')
-
-    return df
-
-
-# extend data ###################################
-# CREATE URL / CREATE PAGE NUMBERS
-# ###############################################
-# create URL endpoint for each title
-# this URL should also have endpoint for each page
-# final page param found inside the input text
-def create_url(d):
-    # grab all columns needed to create the URL
-    # cols = ['this', 'that']
-    return None
-
-
-def split_by(x, char):
-    return pd.Series(str(x).split(char))
 
 
 # use: df['sum'], df['prod'], df['quot'] = zip(*map(sum_prod_quot, df['a'], df['b'], df['c']))
@@ -197,4 +155,3 @@ def create_page_numbers(d):
     print(data.iloc[5:9])
 
     return data
-

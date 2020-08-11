@@ -2,7 +2,7 @@ def get_sheet_data(service, **kwargs):
     sheet_range = f'{kwargs["workbooks"]["mappings"]["sheet_name"]}!A1:Z'
     # Call the Sheets API
     sheet = service.spreadsheets()
-    result = sheet.values().get(spreadsheetId=kwargs["workbooks"]["mappings"]["key"],
+    result = sheet.values().get(spreadsheetId=kwargs["workbooks"]["mappings"]["key_test"],
                                 range=sheet_range, majorDimension="ROWS").execute()
     data = result.get('values', [])
 

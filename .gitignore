@@ -1,0 +1,39 @@
+# gitignore
+# raw data directory
+/data
+
+# and all archive dirs found in subdirs
+/_archive
+archive/
+_archive.py
+log.txt
+# dotenv environment variables file
+.aws
+.env
+credentials*
+token.pickle
+
+# my development folder...
+/python/_in_development
+
+# admin from neo4j DO server
+/neo4j-admin
+
+# nginx
+/nginx
+
+# virtual env
+venv
+
+# python cache
+__pycache__
+
+# vs code settings
+.vscode
+
+# pycharm
+.idea
+
+
+
+

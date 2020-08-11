@@ -1,10 +1,12 @@
-from generate_acip_schema import GoogleSheets
-from tests.config import gs, mysql
-from tests.acip_catalogs_utils import set_up_data_frame, create_column_mapper, create_page_numbers
+from python.classes import GoogleSheets
+from python.config import gs
+from python.functions import create_page_numbers, clean_columns, create_column_mapper
 from pandas import concat, DataFrame
 import sys
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
+
+# NEED MYSQL CONFIG FILE...
 
 # params ------------------------------------------------------
 threshold = 0.99
@@ -38,7 +40,7 @@ data_list = []
 for name in title_catalog_worksheets:
     # get data, transform to data frame
     ws = gs_instance.get_worksheet_data(ws=name)
-    data = set_up_data_frame(ws)
+    data = clean_columns(ws)
     # map out new column names
     m = create_column_mapper(gs.target_columns, list(data.columns), threshold=threshold)
     new_cols = list(m.values())
