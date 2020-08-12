@@ -4,7 +4,9 @@ from .google_services.get_sheet_data import get_sheet_data
 from .google_services.get_drive_items import get_drive_items
 
 # dataframes
-from .dataframes.dataframes import clean_columns, split_by, create_column_mapper, similar_sequence
+from .dataframes.dataframe_utils import clean_columns, split_by, create_column_mapper, similar_sequence
+
+# catalogs
 from .catalogs.acip_catalogs_utils import create_page_numbers
 
 # graph functions

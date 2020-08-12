@@ -4,7 +4,7 @@ from apiclient import errors
 # in drive both files and folders are seen as 'files'
 # with names and id's
 # each has a parent, for each it's the enclosing folder
-def get_drive_items(service, query, flag_type='folder'):
+def get_drive_items(service, query, driveId, flag_type='folder'):
     # Call the Drive v3 API
     page_token = None
     drive_list = []
@@ -12,6 +12,10 @@ def get_drive_items(service, query, flag_type='folder'):
         "q": query,
         "spaces": "drive",
         "fields": "nextPageToken, incompleteSearch, files(id,parents,name)",
+        "driveId": driveId,
+        "corpora": "drive",
+        "supportsAllDrives": True,
+        "includeItemsFromAllDrives": True
         # Specify what you want in the response as a best practice. This string
         # will only get the files' ids, names, and the ids of any folders that they are in
         # Add any other arguments to pass to list()

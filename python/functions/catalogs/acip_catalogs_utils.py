@@ -3,7 +3,7 @@ import math
 import pandas as pd
 
 from functools import lru_cache
-from python.functions.dataframes.dataframes import split_by
+from python.functions.dataframes.dataframe_utils import split_by
 
 pattern_folio_split = '(\\d+)([AB]){1,2}|(?:INC(.*))'
 pattern_inc = '(?:INC(.*))'
@@ -39,7 +39,7 @@ def get_absolute_folio(page):
         return f"{calc}A"
 
 
-@lru_cache(maxsize=None)
+# @lru_cache(maxsize=None)
 def get_page_numbers(folio, start=False, previous_page=0):
 
     if isinstance(folio, float):
@@ -63,7 +63,7 @@ def get_page_numbers(folio, start=False, previous_page=0):
     return calc, previous_page
 
 
-@lru_cache(maxsize=None)
+# @lru_cache(maxsize=None)
 def extractor(column):
     if isinstance(column, float):
         if math.isnan(column):
@@ -131,7 +131,7 @@ def extract_folio_pieces(row):
 # but if it's the 2nd title in a volume, then the 1A actually starts after the 3B from the previous title
 def create_page_numbers(d):
     # grab all relevant columns
-    cols = ['nlm_catalog', 'page_numbers']
+    cols = ['nlm_catalog', 'page_numbers', 'authors_name', 'full_title', 'colophon']
     data = pd.DataFrame(d[cols])
 
     # split catalog into volume ID and title number (vol order)

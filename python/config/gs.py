@@ -8,7 +8,8 @@ conf_gs = {
     "workbooks": {
         "mappings": {
             "key": "1P99VMc_61PNm9FCOSZo1sQvXQNUanJozV4ZTm3kxhWo",
-            "key_test": "185xp01hElVt35kHO5G_l4baXe5nz4yT1lMhTd0Ilg1k",
+            "key_2": "185xp01hElVt35kHO5G_l4baXe5nz4yT1lMhTd0Ilg1k",
+            "text_file_folder": "1aL-KxTspsyMBYT2-eKdAXVOCu1UJvx8l",
             "sheet_name": "Uuree-ACIP-Title-Level-Catalog"
         },
         "key": {
@@ -66,5 +67,16 @@ target_columns = [
     'publisher',
     'copyright_owner',
     'location_of_printing',
+    'colophon'
+]
+
+minimal_target_columns = [
+    'nlm_catalog',
+    'input_file_number',
+    'languages_of_the_main_text',
+    'full_title',
+    'authors_name',
+    'page_numbers',
+    'text_format',
     'colophon'
 ]
