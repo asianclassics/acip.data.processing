@@ -8,10 +8,6 @@ acip_wks = []
 threshold = 0.99
 
 
-def check_for_key(keys, d):
-    return reduce(dict.get, keys, d)
-
-
 def get_sheet_data(service, test=True, output_type='standard', **kwargs):
     spreadsheet_name = kwargs["workbooks"]["mappings"]["key_2"]
     target_cols = minimal_target_columns
@@ -27,7 +23,7 @@ def get_sheet_data(service, test=True, output_type='standard', **kwargs):
         sheets = sheets_meta.get('sheets', '')
 
         for s in sheets:
-            current_sheet = check_for_key(dict_keys, s)
+            current_sheet = reduce(dict.get, dict_keys, s)
             if 'acip-title-level-catalog' in current_sheet.lower():
                 acip_wks.append(current_sheet)
 
@@ -48,6 +44,7 @@ def get_sheet_data(service, test=True, output_type='standard', **kwargs):
         new_cols = list(m.values())
         data = data.rename(columns=m)
         data = data[new_cols]  # only keep column names that match target
+
         print(f"{name}: {data.shape[0]}, {data.shape[1]}")
         data_list.append(data)
         del data

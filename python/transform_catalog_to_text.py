@@ -33,12 +33,8 @@ SHEETS, DRIVE = authorize_google(**conf_gs)
 # 2. INPUT DATA -------------------------------------------------------------------------
 # download catalog data from GoogleSheets to dataframe
 title_catalog_worksheets, df = get_sheet_data(SHEETS, test=False, output_type='minimal', **conf_gs)
-# print(df)
-# quit()
-# data to df
-# df = pd.DataFrame(data)
-# df = df.rename(columns=df.iloc[0]).drop(df.index[0])
-# create mask, all columns you want to ignore
+
+# MASK OPTION, create mask, all columns you want to ignore
 # mask = df.iloc[0].isin([None, ''])
 # the ~ means reverse it
 # df = df.loc[:, ~mask]
