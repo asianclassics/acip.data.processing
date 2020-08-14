@@ -9,7 +9,10 @@ threshold = 0.99
 
 
 def get_sheet_data(service, test=True, output_type='standard', **kwargs):
-    spreadsheet_name = kwargs["workbooks"]["mappings"]["key_2"]
+    if test:
+        spreadsheet_name = kwargs["workbooks"]["mappings"]["key_2"]
+    else:
+        spreadsheet_name = kwargs["workbooks"]["mappings"]["normalized_accession"]
     target_cols = minimal_target_columns
     if output_type == 'standard':
         target_cols = target_columns
@@ -27,8 +30,6 @@ def get_sheet_data(service, test=True, output_type='standard', **kwargs):
             if 'acip-title-level-catalog' in current_sheet.lower():
                 acip_wks.append(current_sheet)
 
-    print(acip_wks)
-
     data_list = []
     for name in acip_wks:
         sheet_range = f'{name}!A1:Z'
@@ -45,7 +46,7 @@ def get_sheet_data(service, test=True, output_type='standard', **kwargs):
         data = data.rename(columns=m)
         data = data[new_cols]  # only keep column names that match target
 
-        print(f"{name}: {data.shape[0]}, {data.shape[1]}")
+        # print(f"{name}: {data.shape[0]}, {data.shape[1]}")
         data_list.append(data)
         del data
 

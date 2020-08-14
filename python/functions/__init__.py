@@ -7,7 +7,8 @@ from .google_services.get_drive_items import get_drive_items
 from .dataframes.dataframe_utils import clean_columns, split_by, create_column_mapper, similar_sequence
 
 # catalogs
-from .catalogs.catalog_pages import create_page_numbers
+from .catalogs.catalog_page_calc import create_page_numbers
+from .catalogs.catalog_text_output import text_output_to_single_file
 
 # graph functions
 from .graph.create_relationships import create_relationships

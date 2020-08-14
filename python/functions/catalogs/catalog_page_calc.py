@@ -1,13 +1,18 @@
 import re
 import math
-import pandas as pd
+from tqdm import tqdm
 from collections import Counter
 from functools import lru_cache
-from python.functions.dataframes.dataframe_utils import split_by
+from python.functions.dataframes.dataframe_utils import split_by, create_url
+from warnings import simplefilter
+from pandas import DataFrame, Series
+simplefilter(action='ignore', category=FutureWarning)  # just to suppress pandas Panel FutureWarning
+
 
 pattern_folio_split = '(\\d+)([AB]){1,2}|(?:INC(.*))'
 pattern_inc = '(?:INC(.*))'
 stateful_vars = Counter()
+stateful_vars['rows_skipped'] = 0
 
 
 # use: df['sum'], df['prod'], df['quot'] = zip(*map(sum_prod_quot, df['a'], df['b'], df['c']))
@@ -40,46 +45,23 @@ def get_absolute_folio(page):
         return f"{calc}A"
 
 
-# @lru_cache(maxsize=None)
-def get_page_numbers(folio, start=False, previous_page=0):
-
-    if isinstance(folio, float):
-        if math.isnan(folio):
-            print('nan bread', folio)
-        return pd.Series([])  # 0, 'A'
-
-    lst = re.split(pattern_folio_split, folio)
-    lst = list(filter(None, lst))
-
-    num, *letter = lst
-    letter = letter[0] if letter else 'A'
-    updater = 1 if letter[0] == 'A' else 0
-    # here's the formula (2n - L) - previous_page (if B: L = 0 , if A: L = 1 )
-    calc = (2*int(num) - updater) - previous_page
-    print(f'get_page_nums {calc}, {previous_page}')
-    # to find relative pages you need to subtract previous page from entire formula
-    if start and previous_page == 0 and (int(num) > 1 or letter != 'A'):
-        previous_page = calc - 1
-
-    return calc, previous_page
-
-
 @lru_cache()
 def get_page_numbers_alt(folio, previous_page=0):
 
     if folio is None:
-        # return pd.Series([])
-        print('folio is None')
+        # add logging
+        stateful_vars['rows_skipped'] += 1
         return None
 
     # check if we can make a number out of the folio, if not return empty series
     if isinstance(folio, float):
         if math.isnan(folio):
             print('nan bread', folio)
-        return pd.Series([])  # 0, 'A'
+        # add logging
+        stateful_vars['rows_skipped'] += 1
+        return Series([])  # 0, 'A'
 
     # create a list from the folio
-    print('current folio', folio)
     lst = re.split(pattern_folio_split, folio)
     lst = list(filter(None, lst))
 
@@ -93,6 +75,13 @@ def get_page_numbers_alt(folio, previous_page=0):
     # here's the formula (2n - L) - previous_page (if B: L = 0 , if A: L = 1 )
     calc = (2 * int(num) - updater) + previous_page
 
+    # must add something when a page is starting from previous title's page
+    # ie. when within a vol you have title folios like this: 1A-4B, 4B-9A, etc
+    # instead of each title starting 'relatively' at 1A
+    # to find relative pages you need to subtract previous page from entire formula
+    # if start and previous_page == 0 and (int(num) > 1 or letter != 'A'):
+    #     previous_page = calc - 1
+
     return calc
 
 
@@ -101,7 +90,9 @@ def extractor(column):
     if isinstance(column, float):
         if math.isnan(column):
             print('nan bread', column)
-        return pd.Series([])  # 0, 'A'
+        # add logging
+        stateful_vars['rows_skipped'] += 1
+        return Series([])  # 0, 'A'
 
     lst = re.split(pattern_folio_split, column)  # r'(\d+)([AB]?)'
     return list(filter(None, lst))
@@ -138,23 +129,24 @@ def extract_folio_pieces(folios):
 
 
 def process_folio_pieces(row):
-    print(f"processing {row['nlm_catalog']}")
     # print('just entered', row['nlm_catalog'], row['prev_folios'], row['folios'])
     # can pass in row (axis=1) or column (axis=0) as Series
     # if you pass in a single column, each value comes in as str
-    final_list = [''] * 9
-    f_inc = ''
+    # final_list = [''] * 9
 
-    if len(row['folios']) < 2:  # or not row['nlm_catalog']:
-        print('skip \n', row['nlm_catalog'], row)
-        return pd.Series([''] * 9)
+    if not row['folios'] or len(row['folios']) < 2:
+        # log something
+        stateful_vars['rows_skipped'] += 1
+        return Series([''] * 9)
 
     f_start, f_end, start_lst, end_lst, f_inc = extract_folio_pieces(row['folios'])
 
     # get relative page numbers for all rows
     start_page_relative = get_page_numbers_alt(f_start) if f_start is not None else 0
     end_page_relative = get_page_numbers_alt(f_end) if f_end is not None else 0
-    relative_pages = [start_page_relative, end_page_relative]
+    relative_pages = [f"p{start_page_relative}-p{end_page_relative}"]
+    start_page_absolute = start_page_relative
+    end_page_absolute = end_page_relative
     absolute_pages = relative_pages
 
     # at this point we have each piece needed
@@ -162,15 +154,15 @@ def process_folio_pieces(row):
     if stateful_vars['last_vol'] == row['vol']:
         start_page_absolute = start_page_relative + stateful_vars['last_abs_page']
         end_page_absolute = end_page_relative + stateful_vars['last_abs_page']
-        absolute_pages = [start_page_absolute, end_page_absolute]
+        absolute_pages = [f"p{start_page_absolute}-p{end_page_absolute}"]
 
     # rows to remember for next iteration
     stateful_vars['last_vol'] = row['vol']
-    stateful_vars['last_abs_page'] = absolute_pages[1]
-    stateful_vars['first_abs_page'] = absolute_pages[0]
+    stateful_vars['last_abs_page'] = end_page_absolute
+    stateful_vars['first_abs_page'] = start_page_absolute
 
-    final_list = start_lst + end_lst + relative_pages + absolute_pages + [f_inc]
-    return pd.Series(final_list)
+    final_list = relative_pages + absolute_pages + [f_inc]
+    return Series(final_list)
 
 
 # transform folio numbers into pages
@@ -179,24 +171,43 @@ def process_folio_pieces(row):
 # each title is assigned folio numbers that begin with 1A (generally)
 # but if it's the 2nd title in a volume, then the 1A actually starts after the 3B from the previous title
 def create_page_numbers(d):
+    # initialize progress bar for pandas using tqdm
+    tqdm.pandas()
     # grab all relevant columns
-    cols = ['nlm_catalog', 'page_numbers']  # , 'authors_name', 'full_title', 'colophon']
-    data = pd.DataFrame(d[cols]).rename(columns={"page_numbers": "folios"})
-    data.sort_values('nlm_catalog')
+    cols = ['nlm_catalog', 'input_file_number', 'page_numbers', 'authors_name', 'full_title', 'colophon']
+    data = DataFrame(d[cols]).rename(columns={"page_numbers": "folios"})
+    data.sort_values('nlm_catalog', inplace=True)
+
     # split catalog into volume ID and title number (vol order)
     data[['vol', 'vol_order']] = data['nlm_catalog'].apply(split_by, args="-")
 
+    # create IIIF url for each catalog record
+    data[[
+        'bdrc_id', 'bdrc_image_id', 'scan_url'
+          ]] = data['input_file_number'].apply(create_url, args="-")
+
+    # if you need to add the previous rows value to current row for a specific column
     # data[['prev_folios']] = data['folios'].shift()
 
-    # split the folio numbers into their parts (number and letter)
+    # main processing step for folios
+    # create both relative and absolute page ranges
+    # relative: page range within only that specific title
+    # absolute: page range within volume
     data[[
-        'start_num', 'start_letter', 'end_num', 'end_letter',
-        'relative_start', 'relative_end', 'absolute_start', 'absolute_end', 'notes'
-    ]] = data.apply(lambda x: process_folio_pieces(x) if x['folios'] else print('no folios'), axis=1)
+        'relative_pages', 'absolute_pages', 'notes'
+    ]] = data.progress_apply(lambda x: process_folio_pieces(x), axis=1)
 
+    # rearrange column order
+    data = data[['nlm_catalog', 'bdrc_id', 'folios',
+                 'absolute_pages', 'scan_url',
+                 'authors_name', 'full_title', 'colophon'
+                 ]]
+
+    data.dropna(axis=0, how='all', inplace=True)
     data.fillna('', inplace=True)
     data.name = 'title_catalogs'
 
+    print(f"rows skipped during processing, {stateful_vars['rows_skipped']} /// ADD LOGGING FOR THIS.")
     print(data.shape[0], data.shape[1])
 
     return data

@@ -8,10 +8,15 @@ from difflib import SequenceMatcher
 # create URL endpoint for each title
 # this URL should also have endpoint for each page
 # final page param found inside the input text
-def create_url(d):
+def create_url(x, char):
     # grab all columns needed to create the URL
     # cols = ['this', 'that']
-    return None
+    if x:
+        lst_bdrc = str(x).split(char, maxsplit=2)
+        lst_bdrc.append(f"http://nlm.asianclassics.org/en/archives/doc/bdr:{lst_bdrc[0]}")
+        return pd.Series(lst_bdrc)
+    else:
+        return pd.Series([])
 
 
 def split_by(x, char):

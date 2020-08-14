@@ -8,6 +8,7 @@ conf_gs = {
     "workbooks": {
         "mappings": {
             "key": "1P99VMc_61PNm9FCOSZo1sQvXQNUanJozV4ZTm3kxhWo",
+            "normalized_accession": "1SLgnUq4ohrAODB-XNQ6oiVqQxxJmeR0IQPozSpW6xiw",
             "key_2": "185xp01hElVt35kHO5G_l4baXe5nz4yT1lMhTd0Ilg1k",
             "text_file_folder": "1aL-KxTspsyMBYT2-eKdAXVOCu1UJvx8l",
             "sheet_name": "Uuree-ACIP-Title-Level-Catalog"
