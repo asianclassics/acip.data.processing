@@ -70,6 +70,10 @@ for collection in collections:
             document_instance = GenerateDocument(d, conf_bdrc, distance, index_version, collection, fetch_iiif=True)
 
             if INDEX_JSON and document_instance.document is not None and document_instance.index_name is not 'invalid':
+
+                # at some point update the class to split GENERATE and UPDATE document
+                # so in here after generating the document you would call UpdateDocument
+
                 es_instance.direct_index(document_instance.document, document_instance.index_name)
                 # printing on same line, replacing as it goes, \r goes at beginning
                 print("\r Indexing document: {0}, with id: {1}".format(i, document_instance.id), flush=True, end="")

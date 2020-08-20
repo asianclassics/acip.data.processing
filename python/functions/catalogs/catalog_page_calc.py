@@ -3,7 +3,8 @@ import math
 from tqdm import tqdm
 from collections import Counter
 from functools import lru_cache
-from python.functions.dataframes.dataframe_utils import split_by, create_url
+from python.functions.dataframes.dataframe_utils import split_by, create_url, create_urls, \
+    get_request, get_status_code
 from warnings import simplefilter
 from pandas import DataFrame, Series
 simplefilter(action='ignore', category=FutureWarning)  # just to suppress pandas Panel FutureWarning
@@ -161,7 +162,7 @@ def process_folio_pieces(row):
     stateful_vars['last_abs_page'] = end_page_absolute
     stateful_vars['first_abs_page'] = start_page_absolute
 
-    final_list = relative_pages + absolute_pages + [f_inc]
+    final_list = relative_pages + absolute_pages + [start_page_absolute] + [end_page_absolute] + [f_inc]
     return Series(final_list)
 
 
@@ -183,7 +184,7 @@ def create_page_numbers(d):
 
     # create IIIF url for each catalog record
     data[[
-        'bdrc_id', 'bdrc_image_id', 'scan_url'
+        'bdrc_id', 'bdrc_image_id', 'nlm_url'
           ]] = data['input_file_number'].apply(create_url, args="-")
 
     # if you need to add the previous rows value to current row for a specific column
@@ -194,16 +195,22 @@ def create_page_numbers(d):
     # relative: page range within only that specific title
     # absolute: page range within volume
     data[[
-        'relative_pages', 'absolute_pages', 'notes'
+        'relative_pages', 'approx_page_range', 'start_page_absolute', 'end_page_absolute', 'notes'
     ]] = data.progress_apply(lambda x: process_folio_pieces(x), axis=1)
+
+    # this is a hack, to get more reliable URLs use GenerateDocument (but first split out Update)
+    data[['scan_url', 'first_image_url', 'download_url']] = data.progress_apply(lambda x: create_urls(x), axis=1)
+
+    # fast implementation of url code check
+    # data[['status_code']] = data['first_image_url'].apply(get_request).apply(get_status_code)
 
     # rearrange column order
     data = data[['nlm_catalog', 'bdrc_id', 'folios',
-                 'absolute_pages', 'scan_url',
+                 'approx_page_range', 'scan_url', 'download_url',
                  'authors_name', 'full_title', 'colophon'
                  ]]
 
-    data.dropna(axis=0, how='all', inplace=True)
+    data.dropna(axis=0, thresh=3, inplace=True)
     data.fillna('', inplace=True)
     data.name = 'title_catalogs'
 

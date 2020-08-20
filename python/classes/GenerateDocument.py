@@ -96,6 +96,20 @@ class GenerateDocument:
 
         return iiif
 
+    # ------------------
+    # STATIC METHOD FOR IIIF
+    # ------------------
+    @staticmethod
+    def get_iiif_static(self, document):
+        iiif = {}
+        manifest = self.load_manifest(document['workHasItem'])
+        first_image = self.load_first_image_url(manifest)
+
+        if manifest or first_image:
+            iiif = {"manifestURL": manifest, "imageURL": first_image}
+
+        return iiif
+
     # -------------------------------------------------------------------------------------------------
     # Create a unique listing of related IDs for a given document
     # -------------------------------------------------------------------------------------------------
