@@ -1,0 +1,418 @@
+{
+  "acip_catalogs_template" : {
+    "order" : 0,
+    "version" : 1003,
+    "index_patterns" : [
+      "*_acip_catalogs"
+    ],
+    "settings" : {
+      "index" : {
+        "analysis" : {
+          "analyzer" : {
+            "custom_path_tree_reversed" : {
+              "tokenizer" : "custom_hierarchy_reversed"
+            },
+            "custom_path_tree" : {
+              "tokenizer" : "custom_hierarchy"
+            }
+          },
+          "tokenizer" : {
+            "custom_hierarchy" : {
+              "type" : "path_hierarchy",
+              "delimiter" : "/"
+            },
+            "custom_hierarchy_reversed" : {
+              "reverse" : "true",
+              "type" : "path_hierarchy",
+              "delimiter" : "/"
+            }
+          }
+        },
+        "refresh_interval" : "5s"
+      }
+    },
+    "mappings" : {
+      "properties" : {
+        "parentfilepath" : {
+          "type" : "text",
+          "fields" : {
+            "tree" : {
+              "analyzer" : "custom_path_tree",
+              "type" : "text"
+            },
+            "tree_reversed" : {
+              "analyzer" : "custom_path_tree_reversed",
+              "type" : "text"
+            }
+          }
+        },
+        "url-download": {
+          "type": "text",
+          "fields" : {
+            "tree" : {
+              "analyzer" : "custom_path_tree",
+              "type" : "text"
+            },
+            "tree_reversed" : {
+              "analyzer" : "custom_path_tree_reversed",
+              "type" : "text"
+            }
+          }
+        },
+        "url-scan": {
+          "type": "text",
+          "fields" : {
+            "tree" : {
+              "analyzer" : "custom_path_tree",
+              "type" : "text"
+            },
+            "tree_reversed" : {
+              "analyzer" : "custom_path_tree_reversed",
+              "type" : "text"
+            }
+          }
+        },
+        "notes" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "author-unicode" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "author-wylie" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "librarynumber" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "language" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "author-english" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "colophon-unicode" : {
+          "type" : "text"
+        },
+        "imagerid" : {
+          "type" : "keyword"
+        },
+        "libnosub1" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "date_scanned" : {
+          "type" : "date"
+        },
+        "title-wylie" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "papergrade" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "libnosub2" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "drawingsandillustrations" : {
+          "type" : "text"
+        },
+        "title-tibetan-brief" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "colophon-wylie" : {
+          "type" : "text"
+        },
+        "endlineno" : {
+          "type" : "long"
+        },
+        "author-tibetan" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "collection" : {
+          "type" : "keyword"
+        },
+        "date_cataloged" : {
+          "type" : "date"
+        },
+        "title-english" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "workrid" : {
+          "type" : "keyword"
+        },
+        "title-tibetan" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "catno" : {
+          "type" : "keyword"
+        },
+        "folios" : {
+          "type" : "text"
+        },
+        "approx-page-range": {
+          "type": "text"
+        },
+        "title-unicode" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "primary-author-wylie" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "colophon" : {
+          "type" : "text"
+        },
+        "primary-author-english" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "parentrecid" : {
+          "type" : "long"
+        },
+        "beglineno" : {
+          "type" : "long"
+        },
+        "publisheddate" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "dontuse" : {
+          "type" : "boolean"
+        },
+        "linesperpage" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "paperhue" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "@version" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "pagesize" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "primary-author-tibetan" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "libnomain" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "primary-author-unicode" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "recid" : {
+          "type" : "long"
+        },
+        "textformat" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "title-sanskrit" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "date_created" : {
+          "type" : "date"
+        },
+        "papersource" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "readability" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "@timestamp" : {
+          "type" : "date"
+        },
+        "printedareasize" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        },
+        "date_modified" : {
+          "type" : "date"
+        },
+        "location" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "ignore_above" : 256,
+              "type" : "keyword"
+            }
+          }
+        }
+      }
+    },
+    "aliases" : { }
+  }
+}

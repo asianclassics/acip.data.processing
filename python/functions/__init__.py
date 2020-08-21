@@ -3,8 +3,11 @@ from .google_services.authorize_google import authorize_google
 from .google_services.get_sheet_data import get_sheet_data
 from .google_services.get_drive_items import get_drive_items
 
-# dataframes
+# data frames
 from .dataframes.dataframe_utils import clean_columns, split_by, create_column_mapper, similar_sequence
+
+# elastic
+from .elastic.elastic_utils import dataframe_doc_generator
 
 # catalogs
 from .catalogs.catalog_page_calc import create_page_numbers

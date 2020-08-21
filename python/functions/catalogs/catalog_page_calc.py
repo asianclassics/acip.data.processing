@@ -3,10 +3,10 @@ import math
 from tqdm import tqdm
 from collections import Counter
 from functools import lru_cache
-from python.functions.dataframes.dataframe_utils import split_by, create_url, create_urls, \
-    get_request, get_status_code
+from python.functions.dataframes.dataframe_utils import split_by, create_url, create_urls
 from warnings import simplefilter
 from pandas import DataFrame, Series
+import numpy as np
 simplefilter(action='ignore', category=FutureWarning)  # just to suppress pandas Panel FutureWarning
 
 
@@ -204,13 +204,32 @@ def create_page_numbers(d):
     # fast implementation of url code check
     # data[['status_code']] = data['first_image_url'].apply(get_request).apply(get_status_code)
 
-    # rearrange column order
-    data = data[['nlm_catalog', 'bdrc_id', 'folios',
-                 'approx_page_range', 'scan_url', 'download_url',
-                 'authors_name', 'full_title', 'colophon'
-                 ]]
+    # data.rename({
+    #     'nlm_catalog': 'catno',
+    #     'bdrc_id': 'librarynumber',
+    #     'authors_name': 'author-tibetan',
+    #     'full_title': 'title-tibetan'
+    # }, inplace=True)
 
-    data.dropna(axis=0, thresh=3, inplace=True)
+    final_columns = ['nlm_catalog', 'bdrc_id', 'folios',
+                     'approx_page_range', 'scan_url', 'download_url',
+                     'authors_name', 'full_title', 'colophon'
+                     ]
+
+    # rearrange column order
+    data = DataFrame(data[final_columns]).rename(columns={
+        'nlm_catalog': 'catno',
+        'bdrc_id': 'librarynumber',
+        'approx_page_range': 'approx-page-range',
+        'scan_url': 'url-scan',
+        'download_url': 'url-download',
+        'authors_name': 'author-tibetan',
+        'full_title': 'title-tibetan'
+    })
+
+    data['collection'] = 'mongolia'
+    data['catno'].replace('', np.nan, inplace=True)
+    data.dropna(axis=0, subset=['catno'], inplace=True)
     data.fillna('', inplace=True)
     data.name = 'title_catalogs'
 

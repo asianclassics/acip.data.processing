@@ -1,7 +1,8 @@
-from python.config import conf_gs, conf_bdrc
+from python.config import conf_gs, conf_es
+from elasticsearch import helpers, Elasticsearch
+from operator import itemgetter
 from python.functions import authorize_google, get_sheet_data, \
-    create_page_numbers, get_drive_items, text_output_to_single_file
-from python.classes import GenerateDocument
+    create_page_numbers, get_drive_items, text_output_to_single_file, dataframe_doc_generator
 from pandas import DataFrame
 import os
 from googleapiclient.http import MediaFileUpload
@@ -9,14 +10,18 @@ from googleapiclient.http import MediaFileUpload
 # params ------------------------------------------------------
 threshold = 0.99
 # flags
-flag_test = False  # are we running a test?
-flag_drive_upload = True  # should final text file be uploaded to drive?
+output_type = 'elastic'  # drive, elastic options
+flag_test = False
 # vars
 title_catalog_worksheets = []
 df_sort_key = 'nlm_catalog'
+
 output_data_folder = os.path.join(os.path.dirname(__file__), "../data")
 upload_text_file_name = 'mongolia_catalog_altered'
 output_file_path = os.path.join(os.path.dirname(__file__), f"../data/{upload_text_file_name}.txt")
+
+protocol, user, secret, host, port = itemgetter(
+        'protocol', 'user', 'secret', 'host', 'port')(conf_es['cloud'])
 
 # 1. Connectors ##################################
 # connect to GS -----------------------------------------------
@@ -48,10 +53,10 @@ altered_data = create_page_numbers(final_data)
 # print(b.document)
 # quit()
 
-if flag_test:
-    altered_data.to_csv(os.path.join(output_data_folder, "test_output.csv"))
-else:
-    altered_data.to_csv(os.path.join(output_data_folder, "test_output.csv"))
+altered_data.to_csv(os.path.join(output_data_folder, "test_output.csv"))
+
+if output_type == 'drive':
+    print(f"Sending to google drive...")
     # 4. load into DRIVE -----------------------------------------------
     drive_folder_name = 'NLMCatalog_TextFiles'
     driveId = "0AEv34UqlfkRPUk9PVA"  # TECH share drive
@@ -63,13 +68,12 @@ else:
 
     print(folder_id)
 
-    # write the data frame to Google Drive
-
+    # write the data frame to a text file
     if not text_output_to_single_file(altered_data, output_file_path):
         print('problem creating text file')
         quit()
 
-    if flag_drive_upload:
+    if not flag_test:
         # copy to drive
         file_metadata = {
             'name': f'{upload_text_file_name}.txt',
@@ -85,6 +89,23 @@ else:
             supportsAllDrives=True
         ).execute()
         print(f"\nUploaded {upload_text_file_name}.txt with fileId: {file.get('id')}")
+
+elif output_type == 'elastic':
+    print(f"Sending to elastic...")
+    es_url = f"{protocol}://{user}:{secret}@{host}:{port}"
+    es = Elasticsearch([es_url])
+    try:
+        helpers.bulk(
+            es,
+            dataframe_doc_generator(altered_data),
+            chunk_size=1000
+        )
+    except helpers.BulkIndexError as bulk_e:
+        print(f"Bulk error {bulk_e}")
+        pass
+    except helpers.errors as e:
+        print(e)
+        pass
 # #########################################################
 
 # CLOSE CONNECTION -------------------------------------------------

@@ -12,7 +12,7 @@ from elasticsearch_dsl import Search
 # git+https://github.com/joelcrawford/generate_acip_schema@master
 # -------------------------------------------------------------------------------------------------
 class ElasticSearch:
-    def __init__(self, config, env):
+    def __init__(self, config, env='cloud'):
         self.config = config
         self.doc_type = "_doc"
         self.environment = env
@@ -74,7 +74,7 @@ class ElasticSearch:
     def direct_index(self, document, index_name):
 
         try:
-
+            # print(document)
             if '@id' not in document:
                 raise KeyError
 
