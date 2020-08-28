@@ -5,7 +5,6 @@ from googleapiclient.http import MediaFileUpload
 from python.functions import authorize_google, get_sheet_data, get_drive_items
 from python.config import conf_gs
 
-
 '''
 GET DRIVE ITEMS
 so far we have, 
@@ -32,7 +31,8 @@ SHEETS, DRIVE = authorize_google(**conf_gs)
 
 # 2. INPUT DATA -------------------------------------------------------------------------
 # download catalog data from GoogleSheets to dataframe
-title_catalog_worksheets, df = get_sheet_data(SHEETS, test=False, output_type='minimal', **conf_gs)
+title_catalog_worksheets, df = get_sheet_data(
+    SHEETS, test=False, output_type='minimal', **conf_gs)
 
 # MASK OPTION, create mask, all columns you want to ignore
 # mask = df.iloc[0].isin([None, ''])
@@ -50,6 +50,7 @@ if folder_id is None:
     quit()
 
 print(folder_id)
+quit()
 # TO DO: check if file exists and how old it is...
 # if found, then query to find files in that folder
 # files_query = f"'{folder_id[0]}' in parents"
@@ -59,12 +60,14 @@ print(folder_id)
 
 # 4. OUTPUT ----------------------------------------
 # write output to local file
-output_file = path.join(path.dirname(__file__), f"../data/{upload_text_file_name}.txt")
+output_file = path.join(path.dirname(__file__),
+                        f"../data/{upload_text_file_name}.txt")
 with open(output_file, 'w', encoding='utf-8') as outfile:
     for row_idx, row in enumerate(df.itertuples(index=False, name='CatalogItem')):
         for idx, x in enumerate(row):
             outfile.write(f"{df.columns[idx]}: {x}\n")
-        outfile.write('\n=======================================================\n')
+        outfile.write(
+            '\n=======================================================\n')
         # print(f'Writing row {row_idx}\r', end="")
         print("Progress {:2.1%}".format(row_idx / 10), end="\r")
 

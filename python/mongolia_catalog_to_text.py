@@ -1,11 +1,13 @@
-from python.config import conf_gs, conf_es
-from elasticsearch import helpers, Elasticsearch
-from operator import itemgetter
+from googleapiclient.http import MediaFileUpload
+from pandas import DataFrame
 from python.functions import authorize_google, get_sheet_data, \
     create_page_numbers, get_drive_items, text_output_to_single_file, dataframe_doc_generator
-from pandas import DataFrame
-import os
-from googleapiclient.http import MediaFileUpload
+from operator import itemgetter
+from elasticsearch import helpers, Elasticsearch
+from python.config import conf_es, conf_gs
+
+# sys.path.append('python')
+
 
 # params ------------------------------------------------------
 threshold = 0.99
@@ -18,10 +20,11 @@ df_sort_key = 'nlm_catalog'
 
 output_data_folder = os.path.join(os.path.dirname(__file__), "../data")
 upload_text_file_name = 'mongolia_catalog_altered'
-output_file_path = os.path.join(os.path.dirname(__file__), f"../data/{upload_text_file_name}.txt")
+output_file_path = os.path.join(os.path.dirname(
+    __file__), f"../data/{upload_text_file_name}.txt")
 
 protocol, user, secret, host, port = itemgetter(
-        'protocol', 'user', 'secret', 'host', 'port')(conf_es['cloud'])
+    'protocol', 'user', 'secret', 'host', 'port')(conf_es['cloud'])
 
 # 1. Connectors ##################################
 # connect to GS -----------------------------------------------
@@ -31,7 +34,8 @@ SHEETS, DRIVE = authorize_google(**conf_gs)
 
 # 2. INPUT DATA -------------------------------------------------------------------------
 # download catalog data from GoogleSheets to data frame
-title_catalog_worksheets, final_data = get_sheet_data(SHEETS, test=flag_test, **conf_gs)
+title_catalog_worksheets, final_data = get_sheet_data(
+    SHEETS, test=flag_test, **conf_gs)
 
 final_data.sort_values(df_sort_key)
 
@@ -40,6 +44,7 @@ print(f"Title Catalogs: {title_catalog_worksheets}")
 print(f"Combined tables have shape: {final_data.shape[0]}, {final_data.shape[1]} "
       f"and is type data frame {isinstance(final_data, DataFrame)}")
 
+quit()
 
 # add pages --------------------------------------------------------
 altered_data = create_page_numbers(final_data)
@@ -88,7 +93,8 @@ if output_type == 'drive':
             fields='id',
             supportsAllDrives=True
         ).execute()
-        print(f"\nUploaded {upload_text_file_name}.txt with fileId: {file.get('id')}")
+        print(
+            f"\nUploaded {upload_text_file_name}.txt with fileId: {file.get('id')}")
 
 elif output_type == 'elastic':
     print(f"Sending to elastic...")
